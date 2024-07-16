@@ -1,31 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import getCharacters from "./components/character";
 import Header from "./components/header";
 import GameGrid from "./components/characterGrid";
+import score from "./object/score";
+import fetchDisneyCharacterData from "./functions/disneyCharacteracters";
 
 export default function App() {
-  //score and character
-  //const [score, setScore] = useState(0);
-  const [currentCharacter, setCurrentCharacter] = useState(characters[0]);
-  const [availableCharacters, setAvailableCharacters] = useState([
-    ...characters,
-  ]);
-  const characters = getCharacters();
+  const [currentCharacter, setCurrentCharacter] = useState(null);
+  const [availableCharacters, setAvailableCharacters] = useState([]);
+  const getScore = score();
 
-  function updateCurrentCharacter() {
-    setAvailableCharacters(
-      availableCharacters.filter((item) => item.id != currentCharacter.id),
+  useEffect(() => {
+    fetchDisneyCharacterData(
+      "https://api.disneyapi.dev/character?pageSize=20",
+    ).then((data) => {
+      if (data) {
+        console.log({ data });
+        setAvailableCharacters(data);
+        setCurrentCharacter(data[0]);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    updateAvailablePlayers();
+  }, [currentCharacter]);
+
+  function updateAvailablePlayers() {
+    setAvailableCharacters((prevAvailablePlayers) =>
+      prevAvailablePlayers.filter((item) => item.id != currentCharacter.id),
     );
-    setCurrentCharacter();
-    setAvailableCharacters(availableCharacters.in);
   }
-  const content = () => {
-    return;
+  function updateCurrentCharacter() {
+    setCurrentCharacter(availableCharacters[0]);
+  }
+  const character = () => {
+    return {
+      currentCharacter,
+      availableCharacters,
+      updateAvailablePlayers,
+      updateCurrentCharacter,
+    };
   };
+
   return (
     <>
-      <Header />
-      <GameGrid />
+      <Header character={character}  score={getScore}/>
+      {/* <GameGrid /> */}
     </>
   );
 }

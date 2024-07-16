@@ -6,7 +6,7 @@ export default function GameGrid({ content }) {
         
     }
     return (
-        
+      <></>  
     )
 
 }
