@@ -6,18 +6,13 @@ export default function useScore() {
 
   function handleScoreUpdate() {
     setCurrentScore((prevScore) => prevScore + 1);
-    //updateBestScore(currentScore);
   }
 
-  function updateBestScore(newScore) {
-    setBestScore((prevBestScore) =>
-      newScore > prevBestScore ? newScore : prevBestScore,
-    );
-    // if (currentScore > bestScore) {
-    //     setBestScore(currentScore)
-    //     return true
-    // }
-    // return false
+  function updateBestScore() {
+    if (currentScore > bestScore) {
+      setBestScore(currentScore);
+      setCurrentScore(0);
+    } else setCurrentScore(0);
   }
 
   return { currentScore, bestScore, handleScoreUpdate, updateBestScore };

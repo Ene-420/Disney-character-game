@@ -2,14 +2,7 @@ import { useEffect, useState } from "react";
 import Movie from "./movie";
 
 export default function useCharacter() {
-  //const [currentCharacter, setCurrentCharacter] = useState(null);
   const [allCharacters, setAllCharacters] = useState([]);
-
-  //fetchCardData();
-
-  //   useEffect(() => {
-  //     updateAvailablePlayers();
-  //   }, [currentCharacter]);
 
   async function fetchCardData() {
     try {
@@ -30,11 +23,8 @@ export default function useCharacter() {
             item.imageUrl,
           ),
       );
-      // console.log(responseData);
-      setAllCharacters(responseData);
-      //setCurrentCharacter(responseData[0]);
 
-      //console.log({ currentCharacter });
+      setAllCharacters(responseData);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -42,20 +32,9 @@ export default function useCharacter() {
 
   useEffect(() => {
     fetchCardData();
-   // console.log({ allCharacters });
   }, []);
 
-  //update av
-  function updateAvailablePlayers(index) {
-    setAllCharacters((prevAvailablePlayers) =>
-      prevAvailablePlayers.filter((item) => item._id != index),
-    );
-  }
-
   return {
-    //currentCharacter,
     allCharacters,
-    updateAvailablePlayers,
-    //updateCurrentCharacter,
   };
 }
