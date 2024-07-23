@@ -1,14 +1,12 @@
 import { useState } from "react";
 
-export default function score() {
+export default function useScore() {
   const [currentScore, setCurrentScore] = useState(0);
   const [bestScore, setBestScore] = useState(currentScore);
 
   function handleScoreUpdate() {
-    setCurrentScore((prevScore) => {
-      const newScore = prevScore + 1;
-      updateBestScore(newScore);
-    });
+    setCurrentScore((prevScore) => prevScore + 1);
+    //updateBestScore(currentScore);
   }
 
   function updateBestScore(newScore) {
@@ -22,5 +20,5 @@ export default function score() {
     // return false
   }
 
-  return { currentScore, bestScore, handleScoreUpdate };
+  return { currentScore, bestScore, handleScoreUpdate, updateBestScore };
 }

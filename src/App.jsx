@@ -2,51 +2,56 @@ import { useEffect, useState } from "react";
 import getCharacters from "./components/character";
 import Header from "./components/header";
 import GameGrid from "./components/characterGrid";
-import score from "./object/score";
+
 import fetchDisneyCharacterData from "./functions/disneyCharacteracters";
+import Movie from "./object/movie";
+import useScore from "./object/score";
+import useCharacter from "./object/character";
+import generateRandomNumber from "./object/randNumberGen";
+import useCurrentCharacter from "./object/currentCharacter";
+import Loading from "./components/loading";
 
 export default function App() {
-  const [currentCharacter, setCurrentCharacter] = useState(null);
-  const [availableCharacters, setAvailableCharacters] = useState([]);
-  const getScore = score();
+  const getScore = useScore();
+  const { allCharacters } = useCharacter();
+  //const { player } = useCurrentCharacter(allCharacters)
+  const { rand } = generateRandomNumber();
 
-  useEffect(() => {
-    fetchDisneyCharacterData(
-      "https://api.disneyapi.dev/character?pageSize=20",
-    ).then((data) => {
-      if (data) {
-        console.log({ data });
-        setAvailableCharacters(data);
-        setCurrentCharacter(data[0]);
-      }
-    });
-  }, []);
+  const [index, setIndex] = useState(0);
 
-  useEffect(() => {
-    updateAvailablePlayers();
-  }, [currentCharacter]);
+  //const currentPlayer = allCharacters[rand(0,allCharacters.length-1)]
 
-  function updateAvailablePlayers() {
-    setAvailableCharacters((prevAvailablePlayers) =>
-      prevAvailablePlayers.filter((item) => item.id != currentCharacter.id),
-    );
+  function updateIndex() {
+    const value = rand(0, allCharacters.length - 1);
+    setIndex(value);
   }
-  function updateCurrentCharacter() {
-    setCurrentCharacter(availableCharacters[0]);
+
+  // useEffect(() => {
+  //   updateIndex();
+  // }, []);
+  const indexOperations = () => {
+    return {index, updateIndex}
   }
-  const character = () => {
-    return {
-      currentCharacter,
-      availableCharacters,
-      updateAvailablePlayers,
-      updateCurrentCharacter,
-    };
-  };
+  console.log(allCharacters[index]);
 
   return (
     <>
-      <Header character={character}  score={getScore}/>
-      {/* <GameGrid /> */}
+      {allCharacters[index] ? (
+        <>
+          <Header
+            allCharacters={allCharacters}
+            score={getScore}
+            index={index}
+          />
+          <GameGrid
+            allCharacter={allCharacters}
+            score={getScore}
+            indexHandlers={indexOperations}
+          />
+        </>
+      ) : (
+        <Loading />
+      )}
     </>
   );
 }

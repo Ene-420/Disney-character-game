@@ -6,7 +6,7 @@ export default async function fetchDisneyCharacterData(url) {
     if (!response.ok) throw new Error("Invalid Response, Please try again");
 
       const data = await response.json();
-      return filterData(data.data)
+      return filterData(data)
       
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
